@@ -99,7 +99,7 @@ namespace XR.Mono.Cover
                         Log ("loaded {0}", afile);
                         foreach ( var t in asm.GetTypes() )
                         {
-                            if ( loadAll || MatchType( t ) ) 
+                            if ( loadAll || MatchType( t ) )
                             {
                                 Log ("matched type {0}", t.FullName);
                                 MarkLoadedType( a, t );
@@ -147,7 +147,7 @@ namespace XR.Mono.Cover
                 CodeRecord rec;
                 if (!records.TryGetValue (m.FullName, out rec)) {
                     Log("adding matched method {0}",m.FullName);
-                    rec = new CodeRecord () { 
+                    rec = new CodeRecord () {
                         ClassName = m.DeclaringType.CSharpName,
                         Assembly = m.DeclaringType.Assembly.GetName().FullName,
                         Name = m.Name,
@@ -155,7 +155,7 @@ namespace XR.Mono.Cover
                         SourceFile = m.SourceFile,
                     };
                     rec.AddLines( m.LineNumbers.ToArray() );
-                    
+
                     if (!bps.ContainsKey (m.FullName)) {
                         bps [m.FullName] = new List<BreakPoint> ();
                         // add a break on each line
@@ -168,10 +168,10 @@ namespace XR.Mono.Cover
                             bp.Enabled = true;
                         }
                     }
-                    
+
                     records.Add (m.FullName, rec);
                     DataStore.RegisterMethod (rec);
-                } 
+                }
             }
 
 
@@ -216,7 +216,7 @@ namespace XR.Mono.Cover
                 Log( "call {0}", met.Method.FullName );
                 if (records.TryGetValue (met.Method.FullName, out rec)) {
                     rec.CallCount++;
-                    //if (rec.Lines.Count > 0) 
+                    //if (rec.Lines.Count > 0)
                     //    rec.Hit (rec.Lines [0]);
 
                 }
@@ -234,7 +234,7 @@ namespace XR.Mono.Cover
                     lock ( DataStore )
                     {
                         rec.Hit (bp.Location.LineNumber);
-                    
+
                         if ( bp.Location.LineNumber == bp.Record.GetFirstLine() ) {
                             rec.CallCount++;
                         }
@@ -270,7 +270,7 @@ namespace XR.Mono.Cover
             for ( int i = 0; i < typeMatchPatterns.Length; i++ )
             {
                 var t = typeMatchPatterns[i];
-                if ( !AddAssemblyMatcher(t) ) 
+                if ( !AddAssemblyMatcher(t) )
                 {
                     DataStore.SaveMeta( String.Format("match:{0:000}", i), t);
                     var r = new Regex (t);
@@ -340,7 +340,7 @@ namespace XR.Mono.Cover
             }
         }
 
-        
+
         public void SaveData ( )
         {
             SaveData(false);
@@ -390,7 +390,7 @@ namespace XR.Mono.Cover
             using (var f = new StreamWriter( filename )) {
                 var rv = records.Values.ToArray ();
                 Array.Sort (rv, (CodeRecord x, CodeRecord y) => {
-                    var xa = string.Format (x.ClassName + "\t:" + x.Name);
+                    var xa = string.Format (x.ClassName + ":" + x.Name);
                     var ya = string.Format (y.ClassName + ":" + y.Name);
 
                     return xa.CompareTo (ya);
